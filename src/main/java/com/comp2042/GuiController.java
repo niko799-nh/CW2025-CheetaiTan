@@ -19,6 +19,8 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
+import javafx.scene.control.Label;
+
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -26,6 +28,9 @@ import java.util.ResourceBundle;
 public class GuiController implements Initializable {
 
     private static final int BRICK_SIZE = 20;
+
+    @FXML
+    private Label scoreDisplay;
 
     @FXML
     private GridPane gamePanel;
@@ -48,6 +53,7 @@ public class GuiController implements Initializable {
     private Timeline timeLine;
 
     private final BooleanProperty isPause = new SimpleBooleanProperty();
+    private Label pauseLabel;
 
     private final BooleanProperty isGameOver = new SimpleBooleanProperty();
 
@@ -79,6 +85,9 @@ public class GuiController implements Initializable {
                 }
                 if (keyEvent.getCode() == KeyCode.N) {
                     newGame(null);
+                }
+                if (keyEvent.getCode() == KeyCode.P) {
+                    pauseGame(null);
                 }
             }
         });
@@ -200,26 +209,85 @@ public class GuiController implements Initializable {
         this.eventListener = eventListener;
     }
 
-    public void bindScore(IntegerProperty integerProperty) {
+    public void bindScore(IntegerProperty scoreProperty) {
+        scoreDisplay = new Label("Score: 0");
+        scoreDisplay.setStyle("-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;");
+        scoreDisplay.setLayoutX(130);
+        scoreDisplay.setLayoutY(-190);
+
+        //Keep it updated automatically
+        scoreDisplay.textProperty().bind(scoreProperty.asString("Score: %d"));
+        groupNotification.getChildren().add(scoreDisplay);
     }
 
-    public void gameOver() {
+    public void gameOver(int score) {
         timeLine.stop();
-        gameOverPanel.setVisible(true);
+
+        //GameOverPanel that displays the score
+        GameOverPanel panel = new GameOverPanel(score);
+
+        // Center it inside the game area
+        panel.setLayoutX((gamePanel.getWidth() - 235));  // adjust leftright
+        panel.setLayoutY((gamePanel.getHeight() - 500)); // adjust height
+
+        //Add a background style to make it pop
+        panel.setStyle("-fx-background-color: rgba(0, 0, 0, 0.6); -fx-padding: 20; -fx-alignment: center;");
+        groupNotification.getChildren().clear();
+        groupNotification.getChildren().add(panel);
+
         isGameOver.setValue(Boolean.TRUE);
     }
 
+
     public void newGame(ActionEvent actionEvent) {
         timeLine.stop();
-        gameOverPanel.setVisible(false);
+        //Hide Game Over
+        groupNotification.getChildren().clear();
+
+        //Re-add score label after clearing
+        if (scoreDisplay != null) {
+            groupNotification.getChildren().add(scoreDisplay);
+        }
+        if (gameOverPanel != null) {
+            gameOverPanel.setVisible(false);
+        }
+        //Reset game state
         eventListener.createNewGame();
+
+        // Start again
         gamePanel.requestFocus();
         timeLine.play();
+
         isPause.setValue(Boolean.FALSE);
         isGameOver.setValue(Boolean.FALSE);
     }
 
     public void pauseGame(ActionEvent actionEvent) {
+        if (isPause.getValue()) {
+            //game is paused thenresume
+            timeLine.play();
+            isPause.setValue(false);
+
+            //Hide the pause word
+            if (pauseLabel != null) {
+                groupNotification.getChildren().remove(pauseLabel);
+            }
+
+        } else {
+            //If game is running then pause
+            timeLine.pause();
+            isPause.setValue(true);
+            //Show "PAUSED" text in the middle
+            pauseLabel = new Label("PAUSED");
+            pauseLabel.setStyle("-fx-text-fill: red; -fx-font-size: 36px; -fx-font-weight: bold;");
+            pauseLabel.setLayoutX((gamePanel.getWidth() - 150)/2);
+            pauseLabel.setLayoutY((gamePanel.getHeight() - 500)/2);
+
+            groupNotification.getChildren().add(pauseLabel);
+        }
+
         gamePanel.requestFocus();
     }
+
+
 }
