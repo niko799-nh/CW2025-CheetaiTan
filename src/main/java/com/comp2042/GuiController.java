@@ -20,6 +20,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 import javafx.scene.control.Label;
+import java.awt.Point;
+
 
 
 import java.net.URL;
@@ -28,6 +30,9 @@ import java.util.ResourceBundle;
 public class GuiController implements Initializable {
 
     private static final int BRICK_SIZE = 20;
+
+    @FXML
+    private GridPane nextBrickPanel;
 
     @FXML
     private Label scoreDisplay;
@@ -68,18 +73,22 @@ public class GuiController implements Initializable {
                 if (isPause.getValue() == Boolean.FALSE && isGameOver.getValue() == Boolean.FALSE) {
                     if (keyEvent.getCode() == KeyCode.LEFT || keyEvent.getCode() == KeyCode.A) {
                         refreshBrick(eventListener.onLeftEvent(new MoveEvent(EventType.LEFT, EventSource.USER)));
+                        SoundEffect.playMove();
                         keyEvent.consume();
                     }
                     if (keyEvent.getCode() == KeyCode.RIGHT || keyEvent.getCode() == KeyCode.D) {
                         refreshBrick(eventListener.onRightEvent(new MoveEvent(EventType.RIGHT, EventSource.USER)));
+                        SoundEffect.playMove();
                         keyEvent.consume();
                     }
                     if (keyEvent.getCode() == KeyCode.UP || keyEvent.getCode() == KeyCode.W) {
                         refreshBrick(eventListener.onRotateEvent(new MoveEvent(EventType.ROTATE, EventSource.USER)));
+                        SoundEffect.playMove();
                         keyEvent.consume();
                     }
                     if (keyEvent.getCode() == KeyCode.DOWN || keyEvent.getCode() == KeyCode.S) {
                         moveDown(new MoveEvent(EventType.DOWN, EventSource.USER));
+                        SoundEffect.playMove();
                         keyEvent.consume();
                     }
                 }
@@ -168,6 +177,27 @@ public class GuiController implements Initializable {
 
     private void refreshBrick(ViewData brick) {
         if (isPause.getValue() == Boolean.FALSE) {
+            gamePanel.getChildren().removeIf(node -> node.getStyleClass().contains("ghost"));
+            //ghost(predicted landing)
+            if (eventListener instanceof GameController) {
+                GameController controller = (GameController) eventListener;
+                Point ghostPos = controller.getBoard().getGhostPosition();
+
+                for (int i = 0; i < brick.getBrickData().length; i++) {
+                    for (int j = 0; j < brick.getBrickData()[i].length; j++) {
+                        if (brick.getBrickData()[i][j] != 0) {
+                            Rectangle ghostBlock = new Rectangle(BRICK_SIZE, BRICK_SIZE);
+                            ghostBlock.setFill(Color.web("#FFFFFF", 0.25)); // Light transparent white
+                            ghostBlock.setArcHeight(9);
+                            ghostBlock.setArcWidth(9);
+                            ghostBlock.getStyleClass().add("ghost"); // So we can clear them later
+
+                            gamePanel.add(ghostBlock, j + ghostPos.x, i + ghostPos.y - 2);
+
+                        }
+                    }
+                }
+            }
             brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
             brickPanel.setLayoutY(-42 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
             for (int i = 0; i < brick.getBrickData().length; i++) {
@@ -177,6 +207,7 @@ public class GuiController implements Initializable {
             }
         }
     }
+
 
     public void refreshGameBackground(int[][] board) {
         for (int i = 2; i < board.length; i++) {
@@ -199,6 +230,7 @@ public class GuiController implements Initializable {
                 NotificationPanel notificationPanel = new NotificationPanel("+" + downData.getClearRow().getScoreBonus());
                 groupNotification.getChildren().add(notificationPanel);
                 notificationPanel.showScore(groupNotification.getChildren());
+                SoundEffect.playClear();
             }
             refreshBrick(downData.getViewData());
         }
@@ -212,7 +244,7 @@ public class GuiController implements Initializable {
     public void bindScore(IntegerProperty scoreProperty) {
         scoreDisplay = new Label("Score: 0");
         scoreDisplay.setStyle("-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;");
-        scoreDisplay.setLayoutX(130);
+        scoreDisplay.setLayoutX(225);
         scoreDisplay.setLayoutY(-190);
 
         //Keep it updated automatically
@@ -222,6 +254,7 @@ public class GuiController implements Initializable {
 
     public void gameOver(int score) {
         timeLine.stop();
+        SoundEffect.playGameOver();
 
         //GameOverPanel that displays the score
         GameOverPanel panel = new GameOverPanel(score);
@@ -247,6 +280,10 @@ public class GuiController implements Initializable {
         //Re-add score label after clearing
         if (scoreDisplay != null) {
             groupNotification.getChildren().add(scoreDisplay);
+        }
+        // 🔹 Clear the next brick preview when starting a new game
+        if (nextBrickPanel != null) {
+            nextBrickPanel.getChildren().clear();
         }
         if (gameOverPanel != null) {
             gameOverPanel.setVisible(false);
@@ -288,6 +325,22 @@ public class GuiController implements Initializable {
 
         gamePanel.requestFocus();
     }
+    public void updateNextBrick(int[][] nextBrickShape) {
+        nextBrickPanel.getChildren().clear(); // clear old preview
+
+        for (int i = 0; i < nextBrickShape.length; i++) {
+            for (int j = 0; j < nextBrickShape[i].length; j++) {
+                if (nextBrickShape[i][j] != 0) {
+                    Rectangle r = new Rectangle(18, 18);
+                    r.setArcHeight(6);
+                    r.setArcWidth(6);
+                    r.setFill(getFillColor(nextBrickShape[i][j]));
+                    nextBrickPanel.add(r, j, i);
+                }
+            }
+        }
+    }
+
 
 
 }

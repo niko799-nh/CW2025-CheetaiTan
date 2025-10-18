@@ -20,6 +20,20 @@
             <GameOverPanel fx:id="gameOverPanel"/>
         </VBox>
     </Group>
+
+    <!--Next Brickpreview box -->
+    <VBox layoutX="240" layoutY="50" spacing="5" alignment="CENTER">
+        <Label text="Next" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+        <GridPane fx:id="nextBrickPanel"
+                  layoutX="320" layoutY="60"
+                  prefWidth="80" prefHeight="40"
+                  style="-fx-background-color: rgba(255,255,255,0.1);
+                 -fx-border-color: white;
+                 -fx-border-width: 2;
+                 -fx-background-radius: 8;"
+                  hgap="1" vgap="1"/>
+    </VBox>
+
     <stylesheets>
         <URL value="@window_style.css"/>
     </stylesheets>
