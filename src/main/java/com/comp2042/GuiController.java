@@ -91,6 +91,11 @@ public class GuiController implements Initializable {
                         SoundEffect.playMove();
                         keyEvent.consume();
                     }
+                    if (keyEvent.getCode() == KeyCode.ENTER) {
+                        down(new MoveEvent(EventType.DOWN, EventSource.USER));
+                        keyEvent.consume();
+                    }
+
                 }
                 if (keyEvent.getCode() == KeyCode.N) {
                     newGame(null);
@@ -325,6 +330,7 @@ public class GuiController implements Initializable {
 
         gamePanel.requestFocus();
     }
+
     public void updateNextBrick(int[][] nextBrickShape) {
         nextBrickPanel.getChildren().clear(); // clear old preview
 
@@ -340,7 +346,38 @@ public class GuiController implements Initializable {
             }
         }
     }
-
-
+    private boolean canMoveFurther(ViewData brick) {
+        return brick.getyPosition() < 30;
+    }
+    public void down(MoveEvent event) {
+        if (isPause.getValue() == Boolean.FALSE && isGameOver.getValue() == Boolean.FALSE) {
+            DownData downData = null;
+            ViewData viewData;
+            // Keep moving down until brick can't move anymore or data becomes null
+            while (true) {
+                downData = eventListener.onDownEvent(event);
+                // If nothing to show or game ended — stop loop
+                if (downData == null || downData.getViewData() == null) {
+                    break;
+                }
+                viewData = downData.getViewData();
+                refreshBrick(viewData);
+                // 🎵 If a row gets cleared, play clear sound
+                if (downData.getClearRow() != null && downData.getClearRow().getLinesRemoved() > 0) {
+                    NotificationPanel notificationPanel =
+                            new NotificationPanel("+" + downData.getClearRow().getScoreBonus());
+                    groupNotification.getChildren().add(notificationPanel);
+                    notificationPanel.showScore(groupNotification.getChildren());
+                    SoundEffect.playClear();
+                }
+                // Stop if brick cannot move further (touching another brick or bottom)
+                if (downData.getClearRow() != null || !canMoveFurther(viewData)) {
+                    break;
+                }
+            }
+            // Merge to background to finalize placement
+            eventListener.onDownEvent(new MoveEvent(EventType.DOWN, EventSource.THREAD));
+        }
+    }
 
 }
