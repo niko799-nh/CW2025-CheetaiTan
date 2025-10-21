@@ -281,7 +281,7 @@ public class GuiController implements Initializable {
         if (scoreDisplay != null) {
             groupNotification.getChildren().add(scoreDisplay);
         }
-        //Clearing
+        // 🔹 Clear the next brick preview when starting a new game
         if (nextBrickPanel != null) {
             nextBrickPanel.getChildren().clear();
         }
