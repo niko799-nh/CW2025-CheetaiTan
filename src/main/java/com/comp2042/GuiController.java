@@ -286,7 +286,7 @@ public class GuiController implements Initializable {
         if (scoreDisplay != null) {
             groupNotification.getChildren().add(scoreDisplay);
         }
-        // 🔹 Clear the next brick preview when starting a new game
+        //Clearing
         if (nextBrickPanel != null) {
             nextBrickPanel.getChildren().clear();
         }
@@ -353,7 +353,7 @@ public class GuiController implements Initializable {
         if (isPause.getValue() == Boolean.FALSE && isGameOver.getValue() == Boolean.FALSE) {
             DownData downData = null;
             ViewData viewData;
-            // Keep moving down until brick can't move anymore or data becomes null
+            //Keep moving down until brick can't move anymore
             while (true) {
                 downData = eventListener.onDownEvent(event);
                 // If nothing to show or game ended — stop loop
@@ -362,7 +362,7 @@ public class GuiController implements Initializable {
                 }
                 viewData = downData.getViewData();
                 refreshBrick(viewData);
-                // 🎵 If a row gets cleared, play clear sound
+                //play clear sound
                 if (downData.getClearRow() != null && downData.getClearRow().getLinesRemoved() > 0) {
                     NotificationPanel notificationPanel =
                             new NotificationPanel("+" + downData.getClearRow().getScoreBonus());
@@ -370,12 +370,12 @@ public class GuiController implements Initializable {
                     notificationPanel.showScore(groupNotification.getChildren());
                     SoundEffect.playClear();
                 }
-                // Stop if brick cannot move further (touching another brick or bottom)
+                //Stop if brick cannot move anymore
                 if (downData.getClearRow() != null || !canMoveFurther(viewData)) {
                     break;
                 }
             }
-            // Merge to background to finalize placement
+            //Merge to background to finalize placement
             eventListener.onDownEvent(new MoveEvent(EventType.DOWN, EventSource.THREAD));
         }
     }
