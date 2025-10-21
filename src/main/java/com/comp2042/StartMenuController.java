@@ -44,7 +44,7 @@ public class StartMenuController {
             stage.centerOnScreen();
             stage.show();
 
-            // ✅ Keep background music playing (no stop)
+            //Keep background music playing
             Main.startMusic();
 
         } catch (Exception e) {

@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    private static AudioClip bgMusic; // stays alive across scenes
+    private static AudioClip bgMusic;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -21,7 +21,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        // 🎵 Play background music globally
+        //Play background music globally
         bgMusic = new AudioClip(getClass().getResource("/sounds/background.mp3").toString());
         bgMusic.setCycleCount(AudioClip.INDEFINITE);
         bgMusic.setVolume(0.3);
