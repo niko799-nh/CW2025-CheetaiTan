@@ -21,7 +21,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        // 🎵 Play background music globally
+        //Play background music globally
         bgMusic = new AudioClip(getClass().getResource("/sounds/background.mp3").toString());
         bgMusic.setCycleCount(AudioClip.INDEFINITE);
         bgMusic.setVolume(0.3);
