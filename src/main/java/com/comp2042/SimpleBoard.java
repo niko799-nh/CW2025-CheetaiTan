@@ -124,20 +124,4 @@ public class SimpleBoard implements Board {
         score.reset();
         createNewBrick();
     }
-    @Override
-    public Point getGhostPosition() {
-        Point ghostPos = new Point(currentOffset);
-        int[][] shape = brickRotator.getCurrentShape();
-
-        // Move ghost piece down until collision
-        while (!MatrixOperations.intersect(currentGameMatrix, shape, (int) ghostPos.getX(), (int) ghostPos.getY() + 1)) {
-            ghostPos.translate(0, 1);
-        }
-        return ghostPos;
-    }
-    public int[][] getNextBrickShape() {
-        return brickGenerator.getNextBrick().getShapeMatrix().get(0);
-    }
-
-
 }

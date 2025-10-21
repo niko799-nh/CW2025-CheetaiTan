@@ -1,8 +1,5 @@
 package com.comp2042;
 
-import java.awt.Point;
-
-
 public interface Board {
 
     boolean moveBrickDown();
@@ -26,9 +23,4 @@ public interface Board {
     Score getScore();
 
     void newGame();
-
-    Point getGhostPosition();
-
-    int[][] getNextBrickShape();
-
 }

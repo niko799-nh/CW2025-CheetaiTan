@@ -29,7 +29,7 @@
             <version>21.0.6</version>
         </dependency>
 
-        <!-- ✅ JavaFX Media (for AudioClip, Sound, Music, etc.) -->
+        <!-- JavaFX Media -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-media</artifactId>

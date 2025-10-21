@@ -27,7 +27,6 @@ public class GameController implements InputEventListener {
             if (board.createNewBrick()) {
                 viewGuiController.gameOver(board.getScore().scoreProperty().get());
             }
-            viewGuiController.updateNextBrick(board.getNextBrickShape());
 
             viewGuiController.refreshGameBackground(board.getBoardMatrix());
 
@@ -63,8 +62,4 @@ public class GameController implements InputEventListener {
         board.newGame();
         viewGuiController.refreshGameBackground(board.getBoardMatrix());
     }
-    public Board getBoard() {
-        return board;
-    }
-
 }
