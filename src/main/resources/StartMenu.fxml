@@ -14,7 +14,7 @@
     <children>
 
         <!-- Title -->
-        <Label text="玩玩啊你以为!"
+        <Label text="MINI TETRIS"
                layoutX="120" layoutY="120"
                style="-fx-font-size: 42px; -fx-text-fill: white; -fx-font-weight: bold;"/>
 
