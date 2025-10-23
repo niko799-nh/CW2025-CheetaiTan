@@ -29,23 +29,18 @@ public class StartMenuController {
     @FXML
     private void startGame(ActionEvent event) {
         try {
-            //Load the main Tetris game layout
+            // Load the main Tetris layout
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/gameLayout.fxml"));
             Parent root = loader.load();
             GuiController guiController = loader.getController();
-
-            //Connect GUI to game logic
             new GameController(guiController);
 
-            //Switch scene
+            //Switch to game scene
             Stage stage = (Stage) startButton.getScene().getWindow();
             Scene gameScene = new Scene(root, 500, 600);
             stage.setScene(gameScene);
             stage.centerOnScreen();
             stage.show();
-
-            // Keep background music playing
-            Main.startMusic();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -54,7 +49,8 @@ public class StartMenuController {
 
     @FXML
     private void exitGame(ActionEvent event) {
-        Main.stopMusic();
+        //Stop music when exiting game
+        SoundEffect.stopMusic();
         System.exit(0);
     }
 }
