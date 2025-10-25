@@ -248,7 +248,7 @@ public class GuiController implements Initializable {
 
     public void bindScore(IntegerProperty scoreProperty) {
         scoreDisplay = new Label("Score: 0");
-        scoreDisplay.setStyle("-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;");
+        scoreDisplay.setStyle("-fx-text-fill: #00FA9A; -fx-font-size: 18px; -fx-font-weight: bold;");
         scoreDisplay.setLayoutX(225);
         scoreDisplay.setLayoutY(-190);
 
@@ -309,6 +309,7 @@ public class GuiController implements Initializable {
             //game is paused thenresume
             timeLine.play();
             isPause.setValue(false);
+            SoundEffect.resumeMusic();
 
             //Hide the pause word
             if (pauseLabel != null) {
@@ -319,12 +320,12 @@ public class GuiController implements Initializable {
             //If game is running then pause
             timeLine.pause();
             isPause.setValue(true);
+            SoundEffect.pauseMusic();
             //Show "PAUSED" text in the middle
             pauseLabel = new Label("PAUSED");
             pauseLabel.setStyle("-fx-text-fill: red; -fx-font-size: 36px; -fx-font-weight: bold;");
             pauseLabel.setLayoutX((gamePanel.getWidth() - 150)/2);
             pauseLabel.setLayoutY((gamePanel.getHeight() - 500)/2);
-
             groupNotification.getChildren().add(pauseLabel);
         }
 
