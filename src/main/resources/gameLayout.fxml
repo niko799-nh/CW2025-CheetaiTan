@@ -8,12 +8,19 @@
 <?import java.net.URL?>
 <Pane fx:controller="com.comp2042.GuiController"
       xmlns:fx="http://javafx.com/fxml">
-    <GridPane fx:id="brickPanel" vgap="1" hgap="1"/>
+
     <BorderPane styleClass="gameBoard" fx:id="gameBoard">
         <center>
-            <GridPane fx:id="gamePanel" hgap="1" vgap="1" layoutY="30" layoutX="40"/>
+            <GridPane fx:id="gamePanel"
+                      hgap="1" vgap="1"
+                      layoutY="30" layoutX="40"
+                      styleClass="gamePanel"/>
         </center>
     </BorderPane>
+
+    <GridPane fx:id="brickPanel" vgap="1" hgap="1"/>
+
+
 
     <Group fx:id="groupNotification" layoutX="14" layoutY="203">
         <VBox alignment="CENTER">
