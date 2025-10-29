@@ -9,16 +9,15 @@
 <Pane fx:controller="com.comp2042.GuiController"
       xmlns:fx="http://javafx.com/fxml">
 
-    <BorderPane styleClass="gameBoard" fx:id="gameBoard">
-        <center>
+    <BorderPane styleClass="gameBoard" fx:id="gameBoard" >
+    <center>
             <GridPane fx:id="gamePanel"
                       hgap="1" vgap="1"
-                      layoutY="30" layoutX="40"
                       styleClass="gamePanel"/>
         </center>
     </BorderPane>
 
-    <GridPane fx:id="brickPanel" vgap="1" hgap="1"/>
+    <GridPane fx:id="brickPanel" layoutX="240" layoutY="0" vgap="1" hgap="1"/>
 
 
 
@@ -33,7 +32,7 @@
         <Label text="Next" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
         <GridPane fx:id="nextBrickPanel"
                   layoutX="320" layoutY="60"
-                  prefWidth="80" prefHeight="40"
+                  prefWidth="80" prefHeight="180"
                   style="-fx-background-color: rgba(255,255,255,0.1);
                  -fx-border-color: white;
                  -fx-border-width: 2;

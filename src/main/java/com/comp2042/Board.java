@@ -29,6 +29,8 @@ public interface Board {
 
     Point getGhostPosition();
 
+    java.util.List<int[][]> getNextThreeBrickShapes();
+
     int[][] getNextBrickShape();
 
 }

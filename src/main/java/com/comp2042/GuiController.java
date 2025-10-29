@@ -67,7 +67,7 @@ public class GuiController implements Initializable {
         Font.loadFont(getClass().getClassLoader().getResource("digital.ttf").toExternalForm(), 38);
         gamePanel.setFocusTraversable(true);
         gamePanel.requestFocus();
-        brickPanel.setTranslateY(-60); // keep bricks aligned vertically
+        brickPanel.setTranslateY(0); // keep bricks aligned vertically
         gamePanel.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent keyEvent) {
@@ -198,7 +198,10 @@ public class GuiController implements Initializable {
                             ghostBlock.setArcWidth(9);
                             ghostBlock.getStyleClass().add("ghost"); // So we can clear them later
 
+                            ghostBlock.setTranslateX(brickPanel.getTranslateX());
+                            ghostBlock.setTranslateY(brickPanel.getTranslateY());
                             gamePanel.add(ghostBlock, j + ghostPos.x, i + ghostPos.y - 2);
+
 
                         }
                     }
@@ -332,20 +335,46 @@ public class GuiController implements Initializable {
 
         gamePanel.requestFocus();
     }
+    public void updateNextBricks(java.util.List<int[][]> nextBricks) {
+        nextBrickPanel.getChildren().clear(); // clear previous previews
 
-    public void updateNextBrick(int[][] nextBrickShape) {
-        nextBrickPanel.getChildren().clear(); // clear old preview
+        int offsetY = 5; //vertical position tracker
+        int gapBetweenBricks = 20; // spacing between previews
+        for (int[][] brickShape : nextBricks) {
+            //align to left
+            int minX = Integer.MAX_VALUE;
+            int minY = Integer.MAX_VALUE;
+            int maxX = Integer.MIN_VALUE;
+            int maxY = Integer.MIN_VALUE;
 
-        for (int i = 0; i < nextBrickShape.length; i++) {
-            for (int j = 0; j < nextBrickShape[i].length; j++) {
-                if (nextBrickShape[i][j] != 0) {
-                    Rectangle r = new Rectangle(18, 18);
-                    r.setArcHeight(6);
-                    r.setArcWidth(6);
-                    r.setFill(getFillColor(nextBrickShape[i][j]));
-                    nextBrickPanel.add(r, j, i);
+            for (int i = 0; i < brickShape.length; i++) {
+                for (int j = 0; j < brickShape[i].length; j++) {
+                    if (brickShape[i][j] != 0) {
+                        if (j < minX) minX = j;
+                        if (i < minY) minY = i;
+                        if (j > maxX) maxX = j;
+                        if (i > maxY) maxY = i;
+                    }
                 }
             }
+
+            int brickWidth = maxX - minX + 1;
+            int brickHeight = maxY - minY + 1;
+            //Center horizontally
+            int panelWidth = 6; //columns available in next panel (adjust if needed)
+            int startX = (panelWidth - brickWidth) / 2;
+            for (int i = 0; i < brickShape.length; i++) {
+                for (int j = 0; j < brickShape[i].length; j++) {
+                    if (brickShape[i][j] != 0) {
+                        Rectangle r = new Rectangle(18, 18);
+                        r.setArcHeight(6);
+                        r.setArcWidth(6);
+                        r.setFill(getFillColor(brickShape[i][j]));
+                        nextBrickPanel.add(r, j - minX + startX, i - minY + offsetY);
+                    }
+                }
+            }
+            offsetY += brickHeight + gapBetweenBricks;
         }
     }
     private boolean canMoveFurther(ViewData brick) {

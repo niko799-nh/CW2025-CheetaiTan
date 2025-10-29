@@ -3,6 +3,8 @@ package com.comp2042;
 import com.comp2042.logic.bricks.Brick;
 import com.comp2042.logic.bricks.BrickGenerator;
 import com.comp2042.logic.bricks.RandomBrickGenerator;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import java.awt.*;
 
@@ -11,6 +13,7 @@ public class SimpleBoard implements Board {
     private final int width;
     private final int height;
     private final BrickGenerator brickGenerator;
+    private final Queue<Brick> nextBricks = new LinkedList<>();
     private final BrickRotator brickRotator;
     private int[][] currentGameMatrix;
     private Point currentOffset;
@@ -83,10 +86,21 @@ public class SimpleBoard implements Board {
 
     @Override
     public boolean createNewBrick() {
-        Brick currentBrick = brickGenerator.getBrick();
+        while (nextBricks.size() < 3) {
+            nextBricks.add(brickGenerator.getBrick());
+        }
+        Brick currentBrick = nextBricks.poll();
         brickRotator.setBrick(currentBrick);
+
+        //maintain 3 upcoming
+        nextBricks.add(brickGenerator.getBrick());
         currentOffset = new Point(4, 1);
-        return MatrixOperations.intersect(currentGameMatrix, brickRotator.getCurrentShape(), (int) currentOffset.getX(), (int) currentOffset.getY());
+        return MatrixOperations.intersect(
+                currentGameMatrix,
+                brickRotator.getCurrentShape(),
+                (int) currentOffset.getX(),
+                (int) currentOffset.getY()
+        );
     }
 
     @Override
@@ -135,8 +149,17 @@ public class SimpleBoard implements Board {
         }
         return ghostPos;
     }
+    @Override
     public int[][] getNextBrickShape() {
-        return brickGenerator.getNextBrick().getShapeMatrix().get(0);
+        return nextBricks.peek().getShapeMatrix().get(0);
+    }
+
+    public java.util.List<int[][]> getNextThreeBrickShapes() {
+        java.util.List<int[][]> shapes = new java.util.ArrayList<>();
+        for (Brick b : nextBricks) {
+            shapes.add(b.getShapeMatrix().get(0));
+        }
+        return shapes;
     }
 
 

@@ -37,4 +37,6 @@ public class RandomBrickGenerator implements BrickGenerator {
     public Brick getNextBrick() {
         return nextBricks.peek();
     }
+
+
 }

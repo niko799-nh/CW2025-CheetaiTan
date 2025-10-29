@@ -27,7 +27,7 @@ public class GameController implements InputEventListener {
             if (board.createNewBrick()) {
                 viewGuiController.gameOver(board.getScore().scoreProperty().get());
             }
-            viewGuiController.updateNextBrick(board.getNextBrickShape());
+            viewGuiController.updateNextBricks(board.getNextThreeBrickShapes());
 
             viewGuiController.refreshGameBackground(board.getBoardMatrix());
 
