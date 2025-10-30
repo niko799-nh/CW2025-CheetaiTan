@@ -192,6 +192,9 @@ public class GuiController implements Initializable {
                 for (int i = 0; i < brick.getBrickData().length; i++) {
                     for (int j = 0; j < brick.getBrickData()[i].length; j++) {
                         if (brick.getBrickData()[i][j] != 0) {
+                            int targetRow = i + ghostPos.y - 2;
+                            int targetCol = j + ghostPos.x;
+                            if (targetRow < 0) continue;
                             Rectangle ghostBlock = new Rectangle(BRICK_SIZE, BRICK_SIZE);
                             ghostBlock.setFill(Color.web("#FFFFFF", 0.25)); // Light transparent white
                             ghostBlock.setArcHeight(9);
@@ -200,9 +203,7 @@ public class GuiController implements Initializable {
 
                             ghostBlock.setTranslateX(brickPanel.getTranslateX());
                             ghostBlock.setTranslateY(brickPanel.getTranslateY());
-                            gamePanel.add(ghostBlock, j + ghostPos.x, i + ghostPos.y - 2);
-
-
+                            gamePanel.add(ghostBlock, targetCol, targetRow);
                         }
                     }
                 }
