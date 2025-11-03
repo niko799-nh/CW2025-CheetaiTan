@@ -58,6 +58,12 @@ public class GuiController implements Initializable {
     private Timeline timeLine;
 
     private final BooleanProperty isPause = new SimpleBooleanProperty();
+    private double currentSpeed = 400; // initial drop speed in ms
+    private int linesCleared = 0;
+    private int level = 1;
+    private Label linesDisplay;
+    private Label levelDisplay;
+
     private Label pauseLabel;
 
     private final BooleanProperty isGameOver = new SimpleBooleanProperty();
@@ -236,13 +242,9 @@ public class GuiController implements Initializable {
     private void moveDown(MoveEvent event) {
         if (isPause.getValue() == Boolean.FALSE) {
             DownData downData = eventListener.onDownEvent(event);
-            if (downData.getClearRow() != null && downData.getClearRow().getLinesRemoved() > 0) {
-                NotificationPanel notificationPanel = new NotificationPanel("+" + downData.getClearRow().getScoreBonus());
-                groupNotification.getChildren().add(notificationPanel);
-                notificationPanel.showScore(groupNotification.getChildren());
-                SoundEffect.playClear();
+            if (downData != null && downData.getViewData() != null) {
+                refreshBrick(downData.getViewData());
             }
-            refreshBrick(downData.getViewData());
         }
         gamePanel.requestFocus();
     }
@@ -256,10 +258,20 @@ public class GuiController implements Initializable {
         scoreDisplay.setStyle("-fx-text-fill: #00FA9A; -fx-font-size: 18px; -fx-font-weight: bold;");
         scoreDisplay.setLayoutX(225);
         scoreDisplay.setLayoutY(-190);
-
         //Keep it updated automatically
         scoreDisplay.textProperty().bind(scoreProperty.asString("Score: %d"));
         groupNotification.getChildren().add(scoreDisplay);
+
+        levelDisplay = new Label("Level: 1");
+        levelDisplay.setStyle("-fx-text-fill: #00FA9A; -fx-font-size: 18px; -fx-font-weight: bold;");
+        levelDisplay.setLayoutX(225);
+        levelDisplay.setLayoutY(100);
+
+        linesDisplay = new Label("Lines Clear: 0");
+        linesDisplay.setStyle("-fx-text-fill: #00FA9A; -fx-font-size: 18px; -fx-font-weight: bold;");
+        linesDisplay.setLayoutX(225);
+        linesDisplay.setLayoutY(130);
+        groupNotification.getChildren().addAll(levelDisplay, linesDisplay);
     }
 
     public void gameOver(int score) {
@@ -281,34 +293,48 @@ public class GuiController implements Initializable {
         isGameOver.setValue(Boolean.TRUE);
     }
 
-
     public void newGame(ActionEvent actionEvent) {
         timeLine.stop();
         //Hide Game Over
         groupNotification.getChildren().clear();
+        //Reset the count
+        linesCleared = 0;
+        level = 1;
+        currentSpeed = 400;
+        // Reset label
+        if (scoreDisplay != null) groupNotification.getChildren().add(scoreDisplay);
+        if (levelDisplay == null) {
+            levelDisplay = new Label("Level: 1");
+            levelDisplay.setStyle("-fx-text-fill: #00FA9A; -fx-font-size: 18px; -fx-font-weight: bold;");
+            levelDisplay.setLayoutX(225);
+            levelDisplay.setLayoutY(100);
+        } else {
+            levelDisplay.setText("Level: 1");
+        }
+        if (linesDisplay == null) {
+            linesDisplay = new Label("Lines clear: 0");
+            linesDisplay.setStyle("-fx-text-fill: #00FA9A; -fx-font-size: 18px; -fx-font-weight: bold;");
+            linesDisplay.setLayoutX(225);
+            linesDisplay.setLayoutY(130);
+        } else {
+            linesDisplay.setText("Lines: 0");
+        }
+        groupNotification.getChildren().addAll(levelDisplay, linesDisplay);
+        //Reset panels
+        if (nextBrickPanel != null) nextBrickPanel.getChildren().clear();
+        if (gameOverPanel != null) gameOverPanel.setVisible(false);
 
-        //Re-add score label after clearing
-        if (scoreDisplay != null) {
-            groupNotification.getChildren().add(scoreDisplay);
-        }
-        //Clearing
-        if (nextBrickPanel != null) {
-            nextBrickPanel.getChildren().clear();
-        }
-        if (gameOverPanel != null) {
-            gameOverPanel.setVisible(false);
-        }
-        //Reset game state
         eventListener.createNewGame();
-
-        // Start again
-        gamePanel.requestFocus();
+        //Restart the falling speed
+        timeLine.getKeyFrames().setAll(new KeyFrame(
+                Duration.millis(currentSpeed),
+                ae -> moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD))
+        ));
         timeLine.play();
-
         isPause.setValue(Boolean.FALSE);
         isGameOver.setValue(Boolean.FALSE);
+        gamePanel.requestFocus();
     }
-
     public void pauseGame(ActionEvent actionEvent) {
         if (isPause.getValue()) {
             //game is paused thenresume
@@ -412,4 +438,28 @@ public class GuiController implements Initializable {
         }
     }
 
+    public void onLinesCleared(int removed) {
+        if (removed <= 0) return;
+        linesCleared += removed;
+        if (linesDisplay != null) linesDisplay.setText("Lines: " + linesCleared);
+
+        int newLevel = (linesCleared / 5) + 1;
+        if (newLevel > level) {
+            level = newLevel;
+            if (levelDisplay != null) levelDisplay.setText("Level: " + level);
+
+            // update speed
+            currentSpeed = Math.max(100, 400 - (level - 1) * 40);
+            timeLine.stop();
+            timeLine.getKeyFrames().setAll(new KeyFrame(
+                    Duration.millis(currentSpeed),
+                    ae -> moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD))
+            ));
+            timeLine.play();
+
+            NotificationPanel lvlUp = new NotificationPanel("LEVEL UP!");
+            groupNotification.getChildren().add(lvlUp);
+            lvlUp.showScore(groupNotification.getChildren());
+        }
+    }
 }

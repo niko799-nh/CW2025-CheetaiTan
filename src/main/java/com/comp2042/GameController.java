@@ -21,8 +21,10 @@ public class GameController implements InputEventListener {
         if (!canMove) {
             board.mergeBrickToBackground();
             clearRow = board.clearRows();
+
             if (clearRow.getLinesRemoved() > 0) {
                 board.getScore().add(clearRow.getScoreBonus());
+                viewGuiController.onLinesCleared(clearRow.getLinesRemoved());
             }
             if (board.createNewBrick()) {
                 viewGuiController.gameOver(board.getScore().scoreProperty().get());
