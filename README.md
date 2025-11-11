@@ -37,6 +37,7 @@ Features I Added / Improved
 
 - Ghost piece (shows where the brick will land)
 - Display of the next three upcoming bricks
+- Added wall kick logic so that pieces can rotate correctly near the left/right edges.
 - Level progression and increasing falling speed
 - Sounds for movement, rotation, line clear and game over
 - Live score display
