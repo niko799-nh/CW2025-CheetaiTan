@@ -17,6 +17,7 @@ public class Main extends Application {
         primaryStage.setTitle("Tetris Game");
         primaryStage.setScene(scene);
         primaryStage.show();
+        primaryStage.setResizable(false);
         SoundEffect.playMenuMusic();
     }
 

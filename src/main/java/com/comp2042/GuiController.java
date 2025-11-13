@@ -22,8 +22,6 @@ import javafx.util.Duration;
 import javafx.scene.control.Label;
 import java.awt.Point;
 
-
-
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -98,7 +96,7 @@ public class GuiController implements Initializable {
                         SoundEffect.playMove();
                         keyEvent.consume();
                     }
-                    if (keyEvent.getCode() == KeyCode.ENTER) {
+                    if (keyEvent.getCode() == KeyCode.ENTER || keyEvent.getCode() == KeyCode.SPACE) {
                         down(new MoveEvent(EventType.DOWN, EventSource.USER));
                         keyEvent.consume();
                     }
@@ -205,7 +203,7 @@ public class GuiController implements Initializable {
                             ghostBlock.setFill(Color.web("#FFFFFF", 0.25)); // Light transparent white
                             ghostBlock.setArcHeight(9);
                             ghostBlock.setArcWidth(9);
-                            ghostBlock.getStyleClass().add("ghost"); // So we can clear them later
+                            ghostBlock.getStyleClass().add("ghost");
 
                             ghostBlock.setTranslateX(brickPanel.getTranslateX());
                             ghostBlock.setTranslateY(brickPanel.getTranslateY());
@@ -443,7 +441,7 @@ public class GuiController implements Initializable {
         linesCleared += removed;
         if (linesDisplay != null) linesDisplay.setText("Lines: " + linesCleared);
 
-        int newLevel = (linesCleared / 5) + 1;
+        int newLevel = (linesCleared / 8) + 1;
         if (newLevel > level) {
             level = newLevel;
             if (levelDisplay != null) levelDisplay.setText("Level: " + level);
