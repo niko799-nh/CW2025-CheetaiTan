@@ -28,7 +28,7 @@
     </Group>
 
     <!--Next Brickpreview box -->
-    <VBox layoutX="3454" layoutY="50" spacing="5" alignment="CENTER">
+    <VBox layoutX="345" layoutY="50" spacing="5" alignment="CENTER">
         <Label text="Next" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
         <GridPane fx:id="nextBrickPanel"
                   layoutX="320" layoutY="60"
