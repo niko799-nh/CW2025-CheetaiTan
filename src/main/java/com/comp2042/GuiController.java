@@ -71,7 +71,8 @@ public class GuiController implements Initializable {
         Font.loadFont(getClass().getClassLoader().getResource("digital.ttf").toExternalForm(), 38);
         gamePanel.setFocusTraversable(true);
         gamePanel.requestFocus();
-        brickPanel.setTranslateY(0); // keep bricks aligned vertically
+        brickPanel.setTranslateY(0);// keep bricks aligned vertically
+        brickPanel.setTranslateX(101);
         gamePanel.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent keyEvent) {
@@ -205,8 +206,6 @@ public class GuiController implements Initializable {
                             ghostBlock.setArcWidth(9);
                             ghostBlock.getStyleClass().add("ghost");
 
-                            ghostBlock.setTranslateX(brickPanel.getTranslateX());
-                            ghostBlock.setTranslateY(brickPanel.getTranslateY());
                             gamePanel.add(ghostBlock, targetCol, targetRow);
                         }
                     }
@@ -254,7 +253,7 @@ public class GuiController implements Initializable {
     public void bindScore(IntegerProperty scoreProperty) {
         scoreDisplay = new Label("Score: 0");
         scoreDisplay.setStyle("-fx-text-fill: #00FA9A; -fx-font-size: 18px; -fx-font-weight: bold;");
-        scoreDisplay.setLayoutX(225);
+        scoreDisplay.setLayoutX(330);
         scoreDisplay.setLayoutY(-190);
         //Keep it updated automatically
         scoreDisplay.textProperty().bind(scoreProperty.asString("Score: %d"));
@@ -262,12 +261,12 @@ public class GuiController implements Initializable {
 
         levelDisplay = new Label("Level: 1");
         levelDisplay.setStyle("-fx-text-fill: #00FA9A; -fx-font-size: 18px; -fx-font-weight: bold;");
-        levelDisplay.setLayoutX(225);
+        levelDisplay.setLayoutX(330);
         levelDisplay.setLayoutY(100);
 
         linesDisplay = new Label("Lines Clear: 0");
         linesDisplay.setStyle("-fx-text-fill: #00FA9A; -fx-font-size: 18px; -fx-font-weight: bold;");
-        linesDisplay.setLayoutX(225);
+        linesDisplay.setLayoutX(330);
         linesDisplay.setLayoutY(130);
         groupNotification.getChildren().addAll(levelDisplay, linesDisplay);
     }
@@ -280,8 +279,8 @@ public class GuiController implements Initializable {
         GameOverPanel panel = new GameOverPanel(score);
 
         // Center it inside the game area
-        panel.setLayoutX((gamePanel.getWidth() - 235));  // adjust leftright
-        panel.setLayoutY((gamePanel.getHeight() - 500)); // adjust height
+        panel.setLayoutX((gamePanel.getWidth() - 130));  // adjust leftright
+        panel.setLayoutY((gamePanel.getHeight() - 550)); // adjust height
 
         //Add a background style to make it pop
         panel.setStyle("-fx-background-color: rgba(0, 0, 0, 0.6); -fx-padding: 20; -fx-alignment: center;");
@@ -304,16 +303,12 @@ public class GuiController implements Initializable {
         if (levelDisplay == null) {
             levelDisplay = new Label("Level: 1");
             levelDisplay.setStyle("-fx-text-fill: #00FA9A; -fx-font-size: 18px; -fx-font-weight: bold;");
-            levelDisplay.setLayoutX(225);
-            levelDisplay.setLayoutY(100);
         } else {
             levelDisplay.setText("Level: 1");
         }
         if (linesDisplay == null) {
             linesDisplay = new Label("Lines clear: 0");
             linesDisplay.setStyle("-fx-text-fill: #00FA9A; -fx-font-size: 18px; -fx-font-weight: bold;");
-            linesDisplay.setLayoutX(225);
-            linesDisplay.setLayoutY(130);
         } else {
             linesDisplay.setText("Lines: 0");
         }
@@ -353,7 +348,7 @@ public class GuiController implements Initializable {
             //Show "PAUSED" text in the middle
             pauseLabel = new Label("PAUSED");
             pauseLabel.setStyle("-fx-text-fill: red; -fx-font-size: 36px; -fx-font-weight: bold;");
-            pauseLabel.setLayoutX((gamePanel.getWidth() - 150)/2);
+            pauseLabel.setLayoutX((gamePanel.getWidth() - -55)/2);
             pauseLabel.setLayoutY((gamePanel.getHeight() - 500)/2);
             groupNotification.getChildren().add(pauseLabel);
         }
