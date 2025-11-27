@@ -1,9 +1,19 @@
 package com.comp2042;
 
+import com.comp2042.model.ClearRow;
+import com.comp2042.model.SimpleBoard;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-
+/**
+ * The row-clearing function of the SimpleBoard class is tested using this test class. It primarily tests the
+ * ability to identify and appropriately remove a single full row.
+ */
 public class ClearRowTest {
+    /**
+     * This test calls clearRows() after the bottom row is fully filled.
+     * A result indicating that one row has been cleared should be returned by the method.
+     * Additionally, it verifies that the cleared row in the new matrix becomes empty.
+     */
 
     @Test
     public void testSingleRowClear() {
