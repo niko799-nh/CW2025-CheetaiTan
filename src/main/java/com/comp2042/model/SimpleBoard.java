@@ -136,7 +136,7 @@ public class SimpleBoard implements Board {
         brickRotator.setBrick(currentBrick);
         //maintain 3 upcoming
         nextBricks.add(brickGenerator.getBrick());
-        currentOffset = new Point(4, 0);
+        currentOffset = new Point(4, -1);
         return MatrixOperations.intersect(
                 currentGameMatrix,
                 brickRotator.getCurrentShape(),

@@ -48,17 +48,18 @@ public class GameController implements InputEventListener {
                 board.getScore().add(clearRow.getScoreBonus());
                 viewGuiController.onLinesCleared(clearRow.getLinesRemoved());
             }
+            viewGuiController.refreshGameBackground(board.getBoardMatrix());
 
             if (board.createNewBrick()) {
                 SoundEffect.stopMusic();
                 SoundEffect.playGameOver();
 
                 viewGuiController.gameOver(board.getScore().scoreProperty().get());
+                return new DownData(clearRow, null);
             }
 
-
             viewGuiController.updateNextBricks(board.getNextThreeBrickShapes());
-            viewGuiController.refreshGameBackground(board.getBoardMatrix());
+
 
         } else {
             // small bonus for soft-drop by user

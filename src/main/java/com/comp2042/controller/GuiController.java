@@ -105,7 +105,7 @@ public class GuiController implements Initializable {
         Font.loadFont(getClass().getClassLoader().getResource("digital.ttf").toExternalForm(), 38);
         gamePanel.setFocusTraversable(true);
         gamePanel.requestFocus();
-        brickPanel.setTranslateY(50);// keep bricks aligned vertically
+        brickPanel.setTranslateY(0);// keep bricks aligned vertically
         brickPanel.setTranslateX(121);
         gamePanel.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
@@ -230,7 +230,7 @@ public class GuiController implements Initializable {
     /**
      * Update the brick position on the screen, also draws the ghost piece.*/
     private void refreshBrick(ViewData brick) {
-        if (isPause.getValue() == Boolean.FALSE) {
+        if (isPause.getValue() == Boolean.FALSE && isGameOver.getValue() == Boolean.FALSE) {
             gamePanel.getChildren().removeIf(node -> node.getStyleClass().contains("ghost"));
             //ghost(predicted landing)
             if (eventListener instanceof GameController) {
@@ -280,9 +280,9 @@ public class GuiController implements Initializable {
     }
 
     private void moveDown(MoveEvent event) {
-        if (isPause.getValue() == Boolean.FALSE) {
+        if (isPause.getValue() == Boolean.FALSE && isGameOver.getValue() == Boolean.FALSE) {
             DownData downData = eventListener.onDownEvent(event);
-            if (downData != null && downData.getViewData() != null) {
+            if (downData != null && downData.getViewData() != null && isGameOver.getValue() == Boolean.FALSE) {
                 refreshBrick(downData.getViewData());
             }
         }
@@ -322,22 +322,26 @@ public class GuiController implements Initializable {
     public void gameOver(int score) {
         timeLine.stop();
 
-        // Disable right-side buttons so player can't click them after game over
+        if (rectangles != null) {
+            for (int i = 0; i < rectangles.length; i++) {
+                for (int j = 0; j < rectangles[i].length; j++) {
+                    if (rectangles[i][j] != null) {
+                        rectangles[i][j].setFill(Color.TRANSPARENT);
+                    }
+                }
+            }
+        }
+        gamePanel.getChildren().removeIf(node -> node.getStyleClass().contains("ghost"));
         if (btnPause != null) btnPause.setDisable(true);
         if (btnRestart != null) btnRestart.setDisable(true);
         if (btnExit != null) btnExit.setDisable(true);
 
         SoundEffect.playGameOver();
-
-        //GameOverPanel that displays the score
         GameOverPanel panel = new GameOverPanel(score);
-
-        // Center it inside the game area
-        panel.setLayoutX((gamePanel.getWidth() - 110));  // adjust leftright
-        panel.setLayoutY((gamePanel.getHeight() - 550)); // adjust height
-
-        //Add a background style to make it pop
+        panel.setLayoutX((gamePanel.getWidth() - 110));
+        panel.setLayoutY((gamePanel.getHeight() - 550));
         panel.setStyle("-fx-background-color: rgba(0, 0, 0, 0.6); -fx-padding: 20; -fx-alignment: center;");
+
         groupNotification.getChildren().clear();
         groupNotification.getChildren().add(panel);
 
@@ -487,6 +491,8 @@ public class GuiController implements Initializable {
                 if (downData.getClearRow() != null && downData.getClearRow().getLinesRemoved() > 0) {
                     NotificationPanel notificationPanel =
                             new NotificationPanel("+" + downData.getClearRow().getScoreBonus());
+                    notificationPanel.setLayoutX(110);
+                    notificationPanel.setLayoutY(50);
                     groupNotification.getChildren().add(notificationPanel);
                     notificationPanel.showScore(groupNotification.getChildren());
                     SoundEffect.playClear();
@@ -523,6 +529,7 @@ public class GuiController implements Initializable {
             timeLine.play();
 
             NotificationPanel lvlUp = new NotificationPanel("LEVEL UP!");
+            lvlUp.setLayoutX(120);
             groupNotification.getChildren().add(lvlUp);
             lvlUp.showScore(groupNotification.getChildren());
         }
