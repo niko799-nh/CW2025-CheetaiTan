@@ -45,10 +45,10 @@ public class GuiController implements Initializable {
     @FXML private GridPane gamePanel;
     @FXML private Group groupNotification;
     @FXML private GridPane brickPanel;
-    @FXML private GameOverPanel gameOverPanel;
     @FXML private Button btnPause;
     @FXML private Button btnRestart;
     @FXML private Button btnExit;
+    @FXML private Label labelNext;
 
     private InputEventListener eventListener;
     private final BooleanProperty isPause = new SimpleBooleanProperty();
@@ -76,7 +76,6 @@ public class GuiController implements Initializable {
         gamePanel.requestFocus();
         gamePanel.setOnKeyPressed(keyEvent -> inputProcessor.handleInput(keyEvent));
 
-        gameOverPanel.setVisible(false);
         final Reflection reflection = new Reflection();
         reflection.setFraction(0.8);
         reflection.setTopOpacity(0.9);
@@ -140,15 +139,17 @@ public class GuiController implements Initializable {
         gameLoop.stop();
         renderer.clearEverything();
 
-        if (btnPause != null) btnPause.setDisable(true);
-        if (btnRestart != null) btnRestart.setDisable(true);
-        if (btnExit != null) btnExit.setDisable(true);
+        if (btnPause != null) btnPause.setVisible(false);
+        if (btnRestart != null) btnRestart.setVisible(false);
+        if (btnExit != null) btnExit.setVisible(false);
+        if (nextBrickPanel != null) nextBrickPanel.setVisible(false);
+        if (labelNext != null) labelNext.setVisible(false);
 
         SoundEffect.playGameOver();
-        GameOverPanel panel = new GameOverPanel(score);
-        panel.setLayoutX((gamePanel.getWidth() - 110));
-        panel.setLayoutY((gamePanel.getHeight() - 550));
-        panel.setStyle("-fx-background-color: rgba(0, 0, 0, 0.6); -fx-padding: 20; -fx-alignment: center;");
+        GameOverPanel panel = new GameOverPanel(score, this);
+        panel.setLayoutX(10); // Adjust this X until it looks centered
+        panel.setLayoutY(-200);
+        panel.setStyle("-fx-background-color: rgba(0, 0, 0, 0.85); -fx-background-radius: 20; -fx-padding: 20; -fx-alignment: center; -fx-border-color: red; -fx-border-width: 2; -fx-border-radius: 20;");
 
         groupNotification.getChildren().clear();
         groupNotification.getChildren().add(panel);
@@ -163,16 +164,17 @@ public class GuiController implements Initializable {
         gameLoop.stop();
         //Hide Game Over
         groupNotification.getChildren().clear();
-        if (btnPause != null) btnPause.setDisable(false);
-        if (btnRestart != null) btnRestart.setDisable(false);
-        if (btnExit != null) btnExit.setDisable(false);
+        if (btnPause != null) btnPause.setDisable(false);btnPause.setVisible(true);
+        if (btnRestart != null) btnRestart.setDisable(false);btnRestart.setVisible(true);
+        if (btnExit != null) btnExit.setDisable(false);btnExit.setVisible(true);
+        if (nextBrickPanel != null) nextBrickPanel.setVisible(true);
+        if (labelNext != null) labelNext.setVisible(true);
         //the control buttons for the new game
         statsDisplay = new GameStatsDisplay(groupNotification);
         statsDisplay.bindScore(((GameController) eventListener).getBoard().getScore().scoreProperty());
         gameLoop.resetSpeed();
         //Reset panels
         if (nextBrickPanel != null) nextBrickPanel.getChildren().clear();
-        if (gameOverPanel != null) gameOverPanel.setVisible(false);
 
         eventListener.createNewGame();
         updateNextBricks(((GameController) eventListener).getBoard().getNextThreeBrickShapes());
@@ -272,6 +274,7 @@ public class GuiController implements Initializable {
     @FXML
     public void exitToMenu(ActionEvent event) {
         try {
+            gameLoop.stop();
             SoundEffect.playMenuMusic();
             FXMLLoader loader =
                     new FXMLLoader(getClass().getResource("/StartMenu.fxml"));
@@ -289,7 +292,6 @@ public class GuiController implements Initializable {
     public BooleanProperty isPause() {
         return isPause;
     }
-
     public BooleanProperty isGameOver() {
         return isGameOver;
     }

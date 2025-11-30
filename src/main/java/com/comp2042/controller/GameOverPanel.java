@@ -1,53 +1,65 @@
 package com.comp2042.controller;
 
 import com.comp2042.model.BestScore;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-
 /**
- * Game over panel shown when the game ends.
- * It displays the player's final score, the saved best score, and a hint for starting a new game.
- * This class extends VBox so it can stack labels vertically.
+ * This class is the Game Over panel la.
+ * <p>
+ * Basically when the user game over, this screen will pop up.
  */
 public class GameOverPanel extends VBox {
-
     /**
-     * Empty constructor required by JavaFX when loading from FXML.*/
-    public GameOverPanel() {
-        // Required empty constructor
-    }
+     * Constructor to setup the Game Over screen.Inside here we do a few things:
+     * Check if your score is power enough to beat the Best Score. If yes, save it.
+     * Add the Restart and Exit buttons.
+     * </p>
+     * @param score      The score just got from the game
+     * @param controller The main controller, use this to tell game to Restart or Go Menu.
+     */
 
-    /**
-     * Creates a Game Over panel using the player's final score. It also loads the best score from file and updates it if needed.
-     * @param score The final score the player achieved before losing.*/
-    // Constructor with score
-    public GameOverPanel(int score) {
-        setSpacing(10);
+    public GameOverPanel(int score, GuiController controller) {
 
-        Label gameOverLabel = new Label("GAME OVER");
-        gameOverLabel.getStyleClass().add("gameOverStyle");
+        this.getStyleClass().clear();
+        this.setStyle("");
 
-        // Load and compare best score
+        this.setAlignment(Pos.CENTER);
+        this.setSpacing(20);
+        this.setPrefWidth(470);
+        this.setMinHeight(590);
+        this.setMaxWidth(450);
+        this.setPadding(new Insets(40, 40, 40, 40));
+
+        this.getStyleClass().add("gameOverPanel");
+
+        Label title = new Label("GAME OVER");
+        title.getStyleClass().add("gameOverTitle");
+
         int bestScore = BestScore.loadBestScore();
-
         if (score > bestScore) {
             BestScore.saveBestScore(score);
             bestScore = score;
         }
 
-        Label scoreLabel = new Label("Current Score: " + score);
-        scoreLabel.setTextFill(Color.LIGHTGREEN);
+        Label current = new Label("CURRENT SCORE: " + score);
+        current.getStyleClass().add("scoreText");
 
-        Label bestLabel = new Label("Best Score: " + bestScore);
-        bestLabel.setTextFill(Color.GOLD);
+        Label best = new Label("BEST SCORE: " + bestScore);
+        best.getStyleClass().add("scoreText");
 
-        //instruction next game
-        Label hintLabel = new Label("Press 'N' for New Game \nPress 'E' for Exit");
-        hintLabel.setTextFill(Color.LIGHTBLUE);
-        hintLabel.setStyle("-fx-font-size: 14px; -fx-font-style: italic;");
+        Button restart = new Button("RESTART (N)");
+        restart.setPrefSize(220, 55);
+        restart.getStyleClass().add("pastelButton");
+        restart.setOnAction(e -> controller.newGame(null));
 
-        // Add everything
-        getChildren().addAll(gameOverLabel, scoreLabel, bestLabel, hintLabel);
+        Button exit = new Button("EXIT (E)");
+        exit.setPrefSize(220, 55);
+        exit.getStyleClass().add("pastelButton");
+        exit.setOnAction(e -> controller.exitToMenu(null));
+
+        this.getChildren().addAll(title, current, best, restart, exit);
     }
 }

@@ -30,22 +30,6 @@
     -fx-text-fill: yellow;
 }
 
-.ipad-dark-grey {
-    -fx-background-color: linear-gradient(#686868 0%, #232723 25%, #373837 75%, #757575 100%),
-    linear-gradient(#020b02, #3a3a3a),
-    linear-gradient(#9d9e9d 0%, #6b6a6b 20%, #343534 80%, #242424 100%),
-    linear-gradient(#8a8a8a 0%, #6b6a6b 20%, #343534 80%, #262626 100%),
-    linear-gradient(#777777 0%, #606060 50%, #505250 51%, #2a2b2a 100%);
-    -fx-background-insets: 0, 1, 4, 5, 6;
-    -fx-background-radius: 9, 8, 5, 4, 3;
-    -fx-padding: 8;
-    -fx-font-family: "Let's go Digital";
-    -fx-font-size: 22px;
-    -fx-font-weight: bold;
-    -fx-text-fill: white;
-    -fx-effect: dropshadow(three-pass-box, rgba(255, 255, 255, 0.2), 1, 0.0, 0, 1);
-}
-
 .rectangleStyle {
     -fx-fill: linear-gradient(from 41px 34px to 50px 50px, reflect, #ff7f50 30%, #faebd7 47%);
 }
@@ -65,18 +49,50 @@
     -fx-font-size: 40px;
     -fx-font-weight: bold;
 }
-
-.gameOverStyle {
-    -fx-font-family: "Let's go Digital";
-    -fx-font-size: 48;
-    -fx-background-color: red;
+.gameOverPanel {
+    -fx-background-color: linear-gradient(to bottom right, #89CFF0, #FFB7B2) !important;
+    -fx-background-radius: 25px !important;
+    -fx-border-color: white !important;
+    -fx-border-width: 5px !important;
+    -fx-border-radius: 25px !important;
+    -fx-padding: 30px !important;
 }
 
-.scoreClass{
+.gameOverTitle {
+    -fx-text-fill: purple ;
     -fx-font-family: "Let's go Digital";
-    -fx-font-size: 38;
-    -fx-fill: yellow;
-    -fx-text-fill: yellow;
+    -fx-font-size: 50px;
+}
+
+.scoreText {
+    -fx-text-fill: yellow ;
+    -fx-font-family: "Let's go Digital";
+    -fx-font-size: 25px;
+}
+
+.pastelButton {
+    -fx-background-color: rgba(255,255,255,0.4) !important;
+    -fx-background-radius: 30px !important;
+    -fx-border-color: blue !important;
+    -fx-border-radius: 30px !important;
+    -fx-border-width: 2px !important;
+    -fx-text-fill: blue !important;
+    -fx-font-family: "Let's go Digital";
+    -fx-font-size: 20px;
+}
+.pastelButton:hover {
+
+    -fx-cursor: hand;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-background-color: rgba(255, 255, 255, 0.7) !important;
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.5), 10, 0, 0, 0);
+}
+
+.pastelButton:pressed {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
+    -fx-background-color: rgba(255, 255, 255, 0.9) !important;
 }
 
 .tetris-button {
