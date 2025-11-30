@@ -43,7 +43,7 @@ public class GameOverPanel extends VBox {
         bestLabel.setTextFill(Color.GOLD);
 
         //instruction next game
-        Label hintLabel = new Label("Press 'N' for New Game");
+        Label hintLabel = new Label("Press 'N' for New Game \nPress 'E' for Exit");
         hintLabel.setTextFill(Color.LIGHTBLUE);
         hintLabel.setStyle("-fx-font-size: 14px; -fx-font-style: italic;");
 

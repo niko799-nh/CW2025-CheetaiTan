@@ -40,20 +40,20 @@
                   hgap="1" vgap="1"/>
     </VBox>
     <!-- Game Control Buttons -->
-    <VBox layoutX="365" layoutY="170" spacing="10" alignment="CENTER">
+    <VBox layoutX="360" layoutY="170" spacing="10" alignment="CENTER">
 
         <Button fx:id="btnPause"
-                text="Pause"
+                text="Pause(P)"
                 onAction="#pauseGame"
                 styleClass="tetris-button" />
 
         <Button fx:id="btnRestart"
-                text="Restart"
+                text="Restart(N)"
                 onAction="#newGame"
                 styleClass="tetris-button"/>
 
         <Button fx:id="btnExit"
-                text="Exit"
+                text="Exit(E)"
                 onAction="#exitToMenu"
                 styleClass="tetris-button"/>
     </VBox>
