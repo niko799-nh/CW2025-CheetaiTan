@@ -1,4 +1,9 @@
 # Tetris Maintenance & Refactoring
+
+Student: Tan Chee Tai
+
+ID: 20593018
+
 Mini Tetris is a modern, polished version of the classic Tetris game.
 I focused on making the gameplay feel smooth, responsive, and fun to play while keeping the original mechanics familiar. The design is simple, clear, and easy to understand even for new players.
 
